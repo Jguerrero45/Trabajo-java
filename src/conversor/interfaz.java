@@ -1,8 +1,15 @@
-
 package conversor;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.*;
 
 public class interfaz extends javax.swing.JFrame {
     private Padre conversor;
+    // Variables para almacenar las últimas selecciones de jComboBox1 y jComboBox2
+    private String ultimaSeleccionE1; // Almacena la última selección de jComboBox1
+    private String ultimaSeleccionE2; // Almacena la última selección de jComboBox2
+    // Instancia de ComboBoxSwitcher que se encargará de evitar selecciones duplicadas
+    private ComboBoxSwitcher comboBoxSwitcher;
 
     public interfaz() {
         initComponents();
@@ -17,55 +24,135 @@ public class interfaz extends javax.swing.JFrame {
             "Kilómetro cuadrado", "Metro cuadrado", "Milla cuadrada", "Yarda cuadrada",
             "Pie cuadrado", "Pulgada cuadrada", "Hectárea", "Acre"
         }));
-        
+
+        // Configuración inicial de las selecciones
+        ultimaSeleccionE1 = (String) jComboBox1.getSelectedItem(); // Se inicializa con la selección actual de jComboBox1
+        ultimaSeleccionE2 = (String) jComboBox2.getSelectedItem(); // Se inicializa con la selección actual de jComboBox2
+        comboBoxSwitcher = new ComboBoxSwitcher(); // Inicialización de la clase ComboBoxSwitcher
+
+        // Añadir listeners para los JComboBox
         jComboBox3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox3ActionPerformed(evt);
+                
                 realizarConversion();
             }
         });
 
+        // Listener para jComboBox1 que actualiza la selección y llama a intercambiarOpciones
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                String seleccionAnteriorE1 = ultimaSeleccionE1; // Almacena la selección anterior de jComboBox1
+                ultimaSeleccionE1 = (String) jComboBox1.getSelectedItem(); // Actualiza con la nueva selección
+                // Llama a intercambiarOpciones para evitar duplicados
+                comboBoxSwitcher.intercambiarOpciones(jComboBox1, jComboBox2, seleccionAnteriorE1, ultimaSeleccionE2);
                 realizarConversion();
             }
         });
 
+        // Listener para jComboBox2 que actualiza la selección y llama a intercambiarOpciones
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                String seleccionAnteriorE2 = ultimaSeleccionE2; // Almacena la selección anterior de jComboBox2
+                ultimaSeleccionE2 = (String) jComboBox2.getSelectedItem(); // Actualiza con la nueva selección
+                // Llama a intercambiarOpciones para evitar duplicados
+                comboBoxSwitcher.intercambiarOpciones(jComboBox2, jComboBox1, seleccionAnteriorE2, ultimaSeleccionE1);
                 realizarConversion();
             }
         });
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jTextField1.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+              
                 realizarConversion();
             }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+           
+                realizarConversion(); // Realiza la conversión al eliminar texto
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                
+                realizarConversion(); // Realiza la conversión al cambiar el texto
+            }
         });
+        
+        // Añadir DocumentListener a jTextField1
+        jTextField1.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+              
+                realizarConversion();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+           
+                realizarConversion(); // Realiza la conversión al eliminar texto
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                
+                realizarConversion(); // Realiza la conversión al cambiar el texto
+            }
+        });
+        // Centrar la ventana y deshabilitar el redimensionado
+        setLocationRelativeTo(null);
+        setResizable(false);
     }
 
-    private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {
-        String selectedItem = (String) jComboBox3.getSelectedItem();
-        if ("Area".equals(selectedItem)) {
-            jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
-                "Kilómetro cuadrado", "Metro cuadrado", "Milla cuadrada", "Yarda cuadrada",
-                "Pie cuadrado", "Pulgada cuadrada", "Hectárea", "Acre"
-            }));
-            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
-                "Kilómetro cuadrado", "Metro cuadrado", "Milla cuadrada", "Yarda cuadrada",
-                "Pie cuadrado", "Pulgada cuadrada", "Hectárea", "Acre"
-            }));
-        } else if ("Angulo plano".equals(selectedItem)) {
-            jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
-                "Grado", "Grado centesimal", "Milirradián", "Minuto de arco",
-                "Radián", "Segundo de arco"
-            }));
-            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
-                "Grado", "Grado centesimal", "Milirradián", "Minuto de arco",
-                "Radián", "Segundo de arco"
-            }));
+    // Clase estática ComboBoxSwitcher que evita que los dos JComboBox seleccionen el mismo valor
+    static class ComboBoxSwitcher {
+        // Método que intercambia las opciones si ambas selecciones son iguales
+        public void intercambiarOpciones(javax.swing.JComboBox<String> comboBox1, javax.swing.JComboBox<String> comboBox2, String seleccionAnterior1, String seleccionAnterior2) {
+            String seleccion1 = (String) comboBox1.getSelectedItem(); // Selección actual de comboBox1
+            String seleccion2 = (String) comboBox2.getSelectedItem(); // Selección actual de comboBox2
+
+            // Si ambas selecciones son iguales, restaurar las selecciones anteriores
+            // Usamos una expresión ternaria para restaurar las selecciones si son iguales
+        // Si seleccion1 no es nulo y es igual a seleccion2, se restauran las selecciones anteriores
+            boolean sonIguales = seleccion1 != null && seleccion1.equals(seleccion2);
+        
+            comboBox1.setSelectedItem(sonIguales ? seleccionAnterior2 : seleccion1);
+            comboBox2.setSelectedItem(sonIguales ? seleccionAnterior1 : seleccion2);
+    
         }
     }
+
+    // Método que actualiza los valores de jComboBox1 y jComboBox2 dependiendo de la selección de jComboBox3
+    private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {
+        String selectedItem = (String) jComboBox3.getSelectedItem();
+
+        // Se establece el modelo del jComboBox1 y jComboBox2 basado en el elemento seleccionado
+        String[] areas = new String[] {
+            "Kilómetro cuadrado", "Metro cuadrado", "Milla cuadrada", "Yarda cuadrada",
+            "Pie cuadrado", "Pulgada cuadrada", "Hectárea", "Acre"
+        };
+
+        String[] angulos = new String[] {
+            "Grado", "Grado centesimal", "Milirradián", "Minuto de arco",
+            "Radián", "Segundo de arco"
+        };
+
+        // Asigna los modelos de los comboBox según el elemento seleccionado utilizando expresiones ternarias
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(
+            "Area".equals(selectedItem) ? areas : 
+            "Angulo plano".equals(selectedItem) ? angulos : 
+            new String[] {} // Valor por defecto si no coincide
+        ));
+    
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(
+        "Area".equals(selectedItem) ? areas : 
+        "Angulo plano".equals(selectedItem) ? angulos : 
+        new String[] {} // Valor por defecto si no coincide
+        ));
+    }
+
 
     private void realizarConversion() {
         try {
@@ -82,9 +169,12 @@ public class interfaz extends javax.swing.JFrame {
             jTextField2.setText("Error");
         }
     }
+    
+    
+
 
     
-    @SuppressWarnings("unchecked")
+   
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -127,7 +217,6 @@ public class interfaz extends javax.swing.JFrame {
         });
 
         jLabel1.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("FORMULA: ");
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -209,7 +298,7 @@ public class interfaz extends javax.swing.JFrame {
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
       
     }//GEN-LAST:event_jComboBox2ActionPerformed
-
+    
     
     public static void main(String args[]) {
         
@@ -219,7 +308,7 @@ public class interfaz extends javax.swing.JFrame {
             }
         });
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;

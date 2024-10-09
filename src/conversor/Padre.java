@@ -16,15 +16,24 @@ public class Padre {
     }
 
     public void realizarAccion() {
-        if ("Area".equalsIgnoreCase(textoComboBox)) {
-            Area area = new Area(comboBox2, comboBox3, texto1, texto2, textoComboBox);
-            area.realizarAccion();
-            this.texto2 = area.getTexto2();
-        } else if ("Angulo plano".equalsIgnoreCase(textoComboBox)) {
-            AnguloPlano anguloPlano = new AnguloPlano(comboBox2, comboBox3, texto1, texto2, textoComboBox);
-            anguloPlano.realizarAccion();
-            this.texto2 = anguloPlano.getTexto2();
-        }
+        // Realiza la conversión según el textoComboBox usando expresiones ternarias
+        texto2 = textoComboBox.toLowerCase().equals("area") 
+            ? convertirArea() 
+            : textoComboBox.toLowerCase().equals("angulo plano") 
+                ? convertirAnguloPlano() 
+                : "Conversión no válida";
+    }
+
+    private String convertirArea() {
+        Area area = new Area(comboBox2, comboBox3, texto1, texto2, textoComboBox);
+        area.realizarAccion();
+        return area.getTexto2();
+    }
+
+    private String convertirAnguloPlano() {
+        AnguloPlano anguloPlano = new AnguloPlano(comboBox2, comboBox3, texto1, texto2, textoComboBox);
+        anguloPlano.realizarAccion();
+        return anguloPlano.getTexto2();
     }
 
     public String getTexto2() {
