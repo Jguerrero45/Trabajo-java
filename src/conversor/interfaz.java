@@ -61,25 +61,7 @@ public class interfaz extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-              
-                realizarConversion();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-           
-                realizarConversion(); // Realiza la conversión al eliminar texto
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                
-                realizarConversion(); // Realiza la conversión al cambiar el texto
-            }
-        });
+        
         
         // Añadir DocumentListener a jTextField1
         jTextField1.getDocument().addDocumentListener(new DocumentListener() {
