@@ -1,9 +1,11 @@
 package conversor;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.*;
 
 public class interfaz extends javax.swing.JFrame {
+
     private Padre conversor;
     // Variables para almacenar las últimas selecciones de jComboBox1 y jComboBox2
     private String ultimaSeleccionE1; // Almacena la última selección de jComboBox1
@@ -13,14 +15,14 @@ public class interfaz extends javax.swing.JFrame {
 
     public interfaz() {
         initComponents();
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Area", "Angulo plano" }));
-        
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Area", "Angulo plano"}));
+
         // Inicializar jComboBox1 y jComboBox2 con las opciones de "Area" por defecto
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{
             "Kilómetro cuadrado", "Metro cuadrado", "Milla cuadrada", "Yarda cuadrada",
             "Pie cuadrado", "Pulgada cuadrada", "Hectárea", "Acre"
         }));
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{
             "Kilómetro cuadrado", "Metro cuadrado", "Milla cuadrada", "Yarda cuadrada",
             "Pie cuadrado", "Pulgada cuadrada", "Hectárea", "Acre"
         }));
@@ -34,7 +36,7 @@ public class interfaz extends javax.swing.JFrame {
         jComboBox3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox3ActionPerformed(evt);
-                
+
                 realizarConversion();
             }
         });
@@ -61,25 +63,23 @@ public class interfaz extends javax.swing.JFrame {
             }
         });
 
-        
-        
         // Añadir DocumentListener a jTextField1
         jTextField1.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-              
+
                 realizarConversion();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-           
+
                 realizarConversion(); // Realiza la conversión al eliminar texto
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                
+
                 realizarConversion(); // Realiza la conversión al cambiar el texto
             }
         });
@@ -90,6 +90,7 @@ public class interfaz extends javax.swing.JFrame {
 
     // Clase estática ComboBoxSwitcher que evita que los dos JComboBox seleccionen el mismo valor
     static class ComboBoxSwitcher {
+
         // Método que intercambia las opciones si ambas selecciones son iguales
         public void intercambiarOpciones(javax.swing.JComboBox<String> comboBox1, javax.swing.JComboBox<String> comboBox2, String seleccionAnterior1, String seleccionAnterior2) {
             String seleccion1 = (String) comboBox1.getSelectedItem(); // Selección actual de comboBox1
@@ -97,12 +98,12 @@ public class interfaz extends javax.swing.JFrame {
 
             // Si ambas selecciones son iguales, restaurar las selecciones anteriores
             // Usamos una expresión ternaria para restaurar las selecciones si son iguales
-        // Si seleccion1 no es nulo y es igual a seleccion2, se restauran las selecciones anteriores
+            // Si seleccion1 no es nulo y es igual a seleccion2, se restauran las selecciones anteriores
             boolean sonIguales = seleccion1 != null && seleccion1.equals(seleccion2);
-        
+
             comboBox1.setSelectedItem(sonIguales ? seleccionAnterior2 : seleccion1);
             comboBox2.setSelectedItem(sonIguales ? seleccionAnterior1 : seleccion2);
-    
+
         }
     }
 
@@ -111,30 +112,29 @@ public class interfaz extends javax.swing.JFrame {
         String selectedItem = (String) jComboBox3.getSelectedItem();
 
         // Se establece el modelo del jComboBox1 y jComboBox2 basado en el elemento seleccionado
-        String[] areas = new String[] {
+        String[] areas = new String[]{
             "Kilómetro cuadrado", "Metro cuadrado", "Milla cuadrada", "Yarda cuadrada",
             "Pie cuadrado", "Pulgada cuadrada", "Hectárea", "Acre"
         };
 
-        String[] angulos = new String[] {
+        String[] angulos = new String[]{
             "Grado", "Grado centesimal", "Milirradián", "Minuto de arco",
             "Radián", "Segundo de arco"
         };
 
         // Asigna los modelos de los comboBox según el elemento seleccionado utilizando expresiones ternarias
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(
-            "Area".equals(selectedItem) ? areas : 
-            "Angulo plano".equals(selectedItem) ? angulos : 
-            new String[] {} // Valor por defecto si no coincide
+                "Area".equals(selectedItem) ? areas
+                : "Angulo plano".equals(selectedItem) ? angulos
+                : new String[]{} // Valor por defecto si no coincide
         ));
-    
+
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(
-        "Area".equals(selectedItem) ? areas : 
-        "Angulo plano".equals(selectedItem) ? angulos : 
-        new String[] {} // Valor por defecto si no coincide
+                "Area".equals(selectedItem) ? areas
+                : "Angulo plano".equals(selectedItem) ? angulos
+                : new String[]{} // Valor por defecto si no coincide
         ));
     }
-
 
     private void realizarConversion() {
         try {
@@ -143,15 +143,13 @@ public class interfaz extends javax.swing.JFrame {
             String valorTexto = jTextField1.getText();
             String tipoConversion = (String) jComboBox3.getSelectedItem();
 
-            // Instancia el conversor según el tipo de conversión seleccionada
-            if (tipoConversion.equals("Area")) {
-                conversor = new Area(unidadOrigen, unidadDestino, valorTexto, "", tipoConversion);
-            } else if (tipoConversion.equals("Angulo plano")) {
-                conversor = new AnguloPlano(unidadOrigen, unidadDestino, valorTexto, "", tipoConversion);
-            }
+            // Instancia el conversor según el tipo de conversión seleccionada usando una expresión ternaria
+            conversor = tipoConversion.equals("Area")
+                    ? new Area(unidadOrigen, unidadDestino, valorTexto, "", tipoConversion)
+                    : new AnguloPlano(unidadOrigen, unidadDestino, valorTexto, "", tipoConversion);
 
             conversor.realizarAccion();
-        
+
             jTextField2.setText(conversor.getTexto2());
             jLabel3.setText(conversor.getFormula()); // Muestra la fórmula en el JLabel
         } catch (NumberFormatException e) {
@@ -159,12 +157,7 @@ public class interfaz extends javax.swing.JFrame {
         }
     }
 
-    
-    
 
-
-    
-   
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -180,20 +173,27 @@ public class interfaz extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel1.setForeground(new java.awt.Color(255, 255, 255));
 
+        jTextField1.setBackground(new java.awt.Color(102, 102, 102));
+        jTextField1.setForeground(new java.awt.Color(255, 255, 255));
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
             }
         });
 
+        jTextField2.setBackground(new java.awt.Color(102, 102, 102));
+        jTextField2.setForeground(new java.awt.Color(255, 255, 255));
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField2ActionPerformed(evt);
             }
         });
 
+        jComboBox1.setBackground(new java.awt.Color(102, 102, 102));
+        jComboBox1.setForeground(new java.awt.Color(255, 255, 255));
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -201,6 +201,8 @@ public class interfaz extends javax.swing.JFrame {
             }
         });
 
+        jComboBox2.setBackground(new java.awt.Color(102, 102, 102));
+        jComboBox2.setForeground(new java.awt.Color(255, 255, 255));
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -208,11 +210,17 @@ public class interfaz extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("FORMULA: ");
 
+        jComboBox3.setBackground(new java.awt.Color(102, 102, 102));
+        jComboBox3.setForeground(new java.awt.Color(255, 255, 255));
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox3.setBorder(null);
 
+        jLabel3.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("k");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -221,13 +229,13 @@ public class interfaz extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(108, 108, 108)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 202, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jComboBox1, 0, 117, Short.MAX_VALUE)
+                    .addComponent(jTextField1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jComboBox2, 0, 117, Short.MAX_VALUE)
+                    .addComponent(jTextField2))
                 .addGap(157, 157, 157))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -239,28 +247,29 @@ public class interfaz extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(295, 295, 295)
-                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(290, 290, 290)
+                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addContainerGap()
                 .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(56, 56, 56)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-                    .addComponent(jTextField2))
+                .addGap(71, 71, 71)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(58, 58, 58)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(58, 58, 58)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)))
+                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(93, Short.MAX_VALUE))
         );
 
@@ -293,17 +302,16 @@ public class interfaz extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
 
     }//GEN-LAST:event_jTextField1ActionPerformed
-    
-    
+
     public static void main(String args[]) {
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new interfaz().setVisible(true);
             }
         });
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;

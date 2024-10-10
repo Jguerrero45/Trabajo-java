@@ -18,66 +18,41 @@ public class Area extends Padre {
         return convertirDesdeMetrosCuadrados(valorEnMetrosCuadrados, unidadDestino);
     }
 
+    // Función recursiva con ternarias para convertir a metros cuadrados
     private double convertirAmetrosCuadrados(double valor, String unidad) {
         formula = ""; // Inicia la fórmula como cadena vacía
-        switch (unidad) {
-            case "Kilómetro cuadrado":
-                formula = "k x " + 1e6;
-                return valor * 1e6;
-            case "Metro cuadrado":
-                formula = "k ";
-                return valor;
-            case "Milla cuadrada":
-                formula = "k x " + 2.59e6;
-                return valor * 2.59e6;
-            case "Yarda cuadrada":
-                formula = "k x " + 0.836127;
-                return valor * 0.836127;
-            case "Pie cuadrado":
-                formula = "k x " + 0.092903;
-                return valor * 0.092903;
-            case "Pulgada cuadrada":
-                formula = "k x " + 0.00064516;
-                return valor * 0.00064516;
-            case "Hectárea":
-                formula = "k x " + 1e4;
-                return valor * 1e4;
-            case "Acre":
-                formula = "k x " + 4046.86;
-                return valor * 4046.86;
-            default:
-                throw new IllegalArgumentException("Unidad desconocida: " + unidad);
-        }
+        return unidad.equals("Kilómetro cuadrado") ? setFormula(valor * 1e6, "k x 1e6") :
+               unidad.equals("Metro cuadrado") ? setFormula(valor, "k") :
+               unidad.equals("Milla cuadrada") ? setFormula(valor * 2.59e6, "k x 2.59e6") :
+               unidad.equals("Yarda cuadrada") ? setFormula(valor * 0.836127, "k x 0.836127") :
+               unidad.equals("Pie cuadrado") ? setFormula(valor * 0.092903, "k x 0.092903") :
+               unidad.equals("Pulgada cuadrada") ? setFormula(valor * 0.00064516, "k x 0.00064516") :
+               unidad.equals("Hectárea") ? setFormula(valor * 1e4, "k x 1e4") :
+               unidad.equals("Acre") ? setFormula(valor * 4046.86, "k x 4046.86") :
+               lanzarExcepcionUnidadDesconocida(unidad);
     }
 
+    // Función recursiva con ternarias para convertir desde metros cuadrados
     private double convertirDesdeMetrosCuadrados(double valor, String unidad) {
-        switch (unidad) {
-            case "Kilómetro cuadrado":
-                formula += " / " + 1e6;
-                return valor / 1e6;
-            case "Metro cuadrado":
-                formula += "";
-                return valor;
-            case "Milla cuadrada":
-                formula += " / " + 2.59e6;
-                return valor / 2.59e6;
-            case "Yarda cuadrada":
-                formula += " / " + 0.836127;
-                return valor / 0.836127;
-            case "Pie cuadrado":
-                formula += " / " + 0.092903;
-                return valor / 0.092903;
-            case "Pulgada cuadrada":
-                formula += " / " + 0.00064516;
-                return valor / 0.00064516;
-            case "Hectárea":
-                formula += " / " + 1e4;
-                return valor / 1e4;
-            case "Acre":
-                formula += " / " + 4046.86;
-                return valor / 4046.86;
-            default:
-                throw new IllegalArgumentException("Unidad desconocida: " + unidad);
-        }
+        return unidad.equals("Kilómetro cuadrado") ? setFormula(valor / 1e6, formula + " / 1e6") :
+               unidad.equals("Metro cuadrado") ? setFormula(valor, formula) :
+               unidad.equals("Milla cuadrada") ? setFormula(valor / 2.59e6, formula + " / 2.59e6") :
+               unidad.equals("Yarda cuadrada") ? setFormula(valor / 0.836127, formula + " / 0.836127") :
+               unidad.equals("Pie cuadrado") ? setFormula(valor / 0.092903, formula + " / 0.092903") :
+               unidad.equals("Pulgada cuadrada") ? setFormula(valor / 0.00064516, formula + " / 0.00064516") :
+               unidad.equals("Hectárea") ? setFormula(valor / 1e4, formula + " / 1e4") :
+               unidad.equals("Acre") ? setFormula(valor / 4046.86, formula + " / 4046.86") :
+               lanzarExcepcionUnidadDesconocida(unidad);
+    }
+
+    // Método auxiliar para establecer la fórmula y devolver el resultado de conversión
+    private double setFormula(double resultado, String formulaCalculada) {
+        formula = formulaCalculada;
+        return resultado;
+    }
+
+    // Método para lanzar la excepción de unidad desconocida
+    private double lanzarExcepcionUnidadDesconocida(String unidad) {
+        throw new IllegalArgumentException("Unidad desconocida: " + unidad);
     }
 }
